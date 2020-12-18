@@ -1,0 +1,8 @@
+---1---
+HEAD / HTTP/1.1
+host: web.mit.edu/career
+
+---2---
+GET / HTTP/1.1
+host: web.mit.edu/career
+
