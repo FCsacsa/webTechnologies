@@ -1,0 +1,118 @@
+---Csanad---
+#
+--1--
+HTTP/1.1 200 OK
+Date: Mon, 04 Jan 2021 16:03:54 GMT
+Content-Type: application/json
+Content-Length: 339
+Connection: keep-alive
+Server: gunicorn/19.9.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+{
+  "args": {},
+  "data": "Hello World!",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Content-Length": "12",
+    "Content-Type": "text/plain",
+    "Host": "httpbin.org",
+    "X-Amzn-Trace-Id": "Root=1-5ff33c6a-72fed9d2326e6fd82929b16e"
+  },
+  "json": null,
+  "origin": "213.222.135.143",
+  "url": "http://httpbin.org/put"
+}
+-----
+#
+--2--
+HTTP/1.1 404 NOT FOUND
+Date: Mon, 04 Jan 2021 16:05:12 GMT
+Content-Type: text/html
+Content-Length: 233
+Connection: keep-alive
+Server: gunicorn/19.9.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p>
+-----
+#
+--3--
+HTTP/1.1 200 OK
+Date: Mon, 04 Jan 2021 16:07:36 GMT
+Content-Type: application/json
+Content-Length: 337
+Connection: keep-alive
+Server: gunicorn/19.9.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+{
+  "args": {},
+  "data": "Hello Worl",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Content-Length": "10",
+    "Content-Type": "text/plain",
+    "Host": "httpbin.org",
+    "X-Amzn-Trace-Id": "Root=1-5ff33d48-4c00975f1e3e6f073cc19a3b"
+  },
+  "json": null,
+  "origin": "213.222.135.143",
+  "url": "http://httpbin.org/put"
+}
+HTTP/1.1 400 Bad Request
+Server: awselb/2.0
+Date: Mon, 04 Jan 2021 16:07:36 GMT
+Content-Type: text/html
+Content-Length: 122
+Connection: close
+
+<html>
+<head><title>400 Bad Request</title></head>
+<body>
+<center><h1>400 Bad Request</h1></center>
+</body>
+</html>
+Connection closed by foreign host.
+-----
+The server considers the end of our line as a new request,
+but since 'd!' is not a correct request, it gets 400 back.
+-----
+#
+--4--
+HTTP/1.1 200 OK
+Date: Mon, 04 Jan 2021 16:11:36 GMT
+Content-Type: application/json
+Content-Length: 345
+Connection: keep-alive
+Server: gunicorn/19.9.0
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+
+{
+  "args": {},
+  "data": "Hello World!\r\n\r",
+  "files": {},
+  "form": {},
+  "headers": {
+    "Content-Length": "15",
+    "Content-Type": "text/plain",
+    "Host": "httpbin.org",
+    "X-Amzn-Trace-Id": "Root=1-5ff33e36-571cb6040d867e77704e21e5"
+  },
+  "json": null,
+  "origin": "213.222.135.143",
+  "url": "http://httpbin.org/put"
+}
+-----
+Since we said we will send 15 characters, we need to press <Enter> once more at the end.
+In the response we can see the 3 additional characters are '\r\n\r'
+-----

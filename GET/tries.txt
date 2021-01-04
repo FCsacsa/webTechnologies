@@ -1,0 +1,42 @@
+---Csanad---
+#
+--1--
+PUT /put HTTP/1.1
+host:httpbin.org
+Content-type:text/plain
+Content-length:12
+
+Hello World!
+
+-----
+#
+--2--
+PUT /myfile HTTP/1.1
+host:httpbin.org
+Content-type:text/plain
+Content-length:12
+
+Hello World!
+
+-----
+#
+--3--
+PUT /put HTTP/1.1
+host:httpbin.org
+Content-type:text/plain
+Content-length:10
+
+Hello World!
+
+-----
+#
+--4--
+PUT /put HTTP/1.1
+host:httpbin.org
+Content-type:text/plain
+Content-length:15
+
+Hello World!
+
+
+-----
