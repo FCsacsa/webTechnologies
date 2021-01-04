@@ -1,0 +1,29 @@
+==Csanad==
+#
+--1--
+HEAD /basic-auth/user/passwd HTTP/1.1
+host:httpbin.org
+
+-----
+#
+--2--
+HEAD /basic-auth/user/passwd HTTP/1.1
+host:httpbin.org
+Authorization: Basic dXNlcjpwYXNzd2Q=
+
+
+-----
+#
+--3--
+HEAD /basic-auth/user/passwd HTTP/1.1
+host:httpbin.org
+Authorization: Basic dXNlcjpwYXNzd2Q=
+
+
+HEAD /basic-auth/user/passwd HTTP/1.1
+host:httpbin.org
+
+
+-----
+#
+==========
