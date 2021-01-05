@@ -81,7 +81,6 @@ Connection: close
 <center><h1>400 Bad Request</h1></center>
 </body>
 </html>
-Connection closed by foreign host.
 -----
 The server considers the end of our line as a new request,
 but since 'd!' is not a correct request, it gets 400 back.
