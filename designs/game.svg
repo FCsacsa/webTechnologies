@@ -14,7 +14,7 @@
    id="svg903"
    inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="game.svg"
-   inkscape:export-filename="C:\Users\farka\Documents\Uni\web\designs\gameStart.png"
+   inkscape:export-filename="C:\Users\farka\Documents\Uni\web\designs\gameWonCircle.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -87,9 +87,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="749.12059"
-     inkscape:cy="562.12484"
+     inkscape:zoom="0.35"
+     inkscape:cx="1145.0034"
+     inkscape:cy="854.38006"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
@@ -3153,6 +3153,11 @@
        inkscape:transform-center-x="-2.3441621e-06"
        inkscape:transform-center-y="1.1439511e-06"
        d="m 360.81905,266.21898 -13.35238,7.70899 -13.35237,-7.70899 0,-15.418 13.35237,-7.709 13.35238,7.709 z" />
+    <path
+       style="fill:#577cfa;fill-opacity:1;stroke:#455dad;stroke-width:2.64583;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 491.48386,227.75818 357.95996,11.906248 h 133.52378 z"
+       id="path2669"
+       sodipodi:nodetypes="cccc" />
     <g
        id="g3138">
       <text
@@ -3216,11 +3221,6 @@
          d="m -211.50333,48.66445 69.80636,40.307416"
          id="path1441" />
     </g>
-    <path
-       style="fill:#577cfa;fill-opacity:1;stroke:#455dad;stroke-width:2.64583;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 491.48386,227.75818 357.95996,11.906248 h 133.52378 z"
-       id="path2669"
-       sodipodi:nodetypes="cccc" />
     <path
        style="fill:#fa8f71;fill-opacity:1;stroke:#ab4d33;stroke-width:2.64583;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 18.915421,57.991835 152.43932,273.84376 H 18.915541 Z"
