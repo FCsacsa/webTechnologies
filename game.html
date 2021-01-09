@@ -18,5 +18,21 @@
                 <a id="opponent_name">username</a>
             </div>
         </div>
+        <script>
+            let clock = document.getElementById("timer");
+            let secs = 0;
+            let mins = 0;
+
+            function updateTime(){
+                secs++;
+                if (secs == 60){
+                    mins++;
+                    secs=0;
+                }
+                clock.innerHTML = `${mins}:${secs.toString().padStart(2,"0")}`;
+            }
+
+            let timer = setInterval(updateTime, 1000)
+        </script>
     </body>
 </html>
