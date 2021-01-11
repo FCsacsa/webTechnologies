@@ -6,17 +6,36 @@
         </title>
     </head>
     <body>
-        <div>
+        <div id="grid" style="display: grid;">
             <!--This will be the main grid element that will contain everything-->
             <div id="timer">0:00</div>
             <div id="player">
                 <a id="player_won">WON!</a>
+                <a id="player_lost">LOST!</a>
                 <a id="player_name">username</a>
+                <a id="player_pieces">0 pieces placed</a>
             </div>
             <div id="opponent">
                 <a id="opponent_won">WON!</a>
-                <a id="opponent_name">username</a>
+                <a id="opponent_lost">LOST!</a>
+                <a id="opponent_name">Wating or Opponent...</a>
+                <a id="opponent_pieces">0 pieces placed</a>
             </div>
+            <button id="home">Go Home!</button>
+
+            <svg id="template" style="display: none;" viewBox="0 0 60 69.28" height="69.28px" width="60px">
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+            </svg>
+            
+            <svg id="template" style="display: grid;" viewBox="0 0 60 69.28" height="69.28px" width="60px">
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+                <polygon points="30 1 59 19.64 59 49.64 30 68.28 1 49.64 1 19.64" style="fill: #e0e0e0; stroke: #000000"/>
+            </svg>
+
+            <script src="javascripts/game.js"></script>
         </div>
     </body>
 </html>
