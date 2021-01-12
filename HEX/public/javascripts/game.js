@@ -10,11 +10,12 @@ let grid = document.getElementById("grid");
 for (let i = 0; i < 11; i++){
     for (let j = 0; j < 11; j++){
         let tile = document.getElementById("template").cloneNode(true);
-        /*let hexagon = document.createElement("polygon");
+        let hexagon = tile.childNodes[1];
+        //console.log(tile.childNodes);
+        hexagon.style = "pointer-events: all;";
         hexagon.addEventListener("click", ()=>{
             clickHandler(j, i);
         });
-        tile.appendChild(hexagon);*/
         tile.style.gridColumnStart = i + (j * 2) + board_start_x;
         tile.style.gridColumnEnd = i + (j * 2) + board_start_x + 2;
         tile.style.gridRowStart = (i * 2) + board_start_y;
