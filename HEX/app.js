@@ -61,47 +61,77 @@ var connectionsID = 0;
 
 wss.on('connection', (websocket) =>{
   websocket.id = connectionsID++;
-  if (last_game){
+  if (last_game != null){
     //there is a non-full game
     connections[websocket.id] = last_game;
     last_game.players.second = websocket;
-    let message1 = messages.O_OPPONENT_CONNECTED;
-    message1.data = {opponent: "Opponent"};
-    websocket.send(JSON.stringify(message1));
-
+    websocket.send(messages.S_GET_USERNAME);
+    if(last_game.names.first != null){
+      let message1 = messages.O_OPPONENT_CONNECTED;
+      message1.data = last_game.names.first;
+      websocket.send(JSON.stringify(message1));
+      console.log('connection set for second player, late');
+    }
   }
   else{
     //there is no full game
     var new_game = new Game(websocket);
     last_game = new_game;
     connections[websocket.id] = new_game;
+    new_game.players.first = websocket;
     websocket.send(messages.S_WAITING_FOR_PLAYER);
-    //websocket.send(messages.S_GET_USERNAME);
+    websocket.send(messages.S_GET_USERNAME);
   }
 
   websocket.on('message', (message) =>{
     Msg = JSON.parse(message);
-    if (Msg.type = messages.T_MOVE){
-      try{
-        connections[websocket.id].move(
-          Msg.data.x,
-          Msg.data.y,
-          Msg.data.player
-        );
-        let response = messages.O_MOVE;
-        response.data = Msg.data;
-        let resStr = JSON.stringify(response);
-        connections[websocket.id].players.first.send(resStr);
-        connections[websocket.id].players.second.send(resStr);
-      }
-      catch(err){
-        if(err instanceof WrongMoveError){
-          websocket.send(messages.S_WRONG_MOVE);
+    switch (Msg.type) {
+      case messages.T_MOVE:
+        try{
+          connections[websocket.id].move(
+            Msg.data.x,
+            Msg.data.y,
+            Msg.data.player
+          );
+          let response = messages.O_MOVE;
+          response.data = Msg.data;
+          let resStr = JSON.stringify(response);
+          connections[websocket.id].players.first.send(resStr);
+          connections[websocket.id].players.second.send(resStr);
         }
-        else{
-          throw err;
+        catch(err){
+          if(err instanceof WrongMoveError){
+            websocket.send(messages.S_WRONG_MOVE);
+          }
+          else{
+            throw err;
+          }
         }
-      }
+        break;
+    
+      case messages.T_USERNAME:
+        let curr_game = connections[websocket.id];
+        console.log(curr_game.players.first.id);
+        console.log(websocket.id);
+        if(curr_game.players.first.id == websocket.id){
+          curr_game.names.first = Msg.data;
+          if(curr_game.players.second != null) {
+            let message1 = messages.O_OPPONENT_CONNECTED;
+            message1.data = Msg.data;
+            curr_game.players.second.send(JSON.stringify(message1));
+            console.log('connection set for second player, early');
+          }
+        }
+        else {
+          curr_game.names.second = Msg.data;
+          let message1 = messages.O_OPPONENT_CONNECTED;
+          message1.data = Msg.data;
+          curr_game.players.first.send(JSON.stringify(message1));
+          console.log('connection set for first player');
+        }
+      
+      default:
+        break;
     }
   })
 
