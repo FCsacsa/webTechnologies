@@ -54,7 +54,7 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var server = http.createServer(app);
-var wss = ws.Server({server});
+var wss = new ws.Server({server});
 var last_game = null;
 var connections = [];
 var connectionsID = 0;
