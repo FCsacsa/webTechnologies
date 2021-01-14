@@ -5,10 +5,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var debug = require('debug')('hex:server');
 var http = require('http');
+var ws = require('ws');
+var Game = require('./game.js');
+var messages = require('./public/javascripts/messages.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const { connect } = require('./routes/index');
+const WrongMoveError = require('./errors.js');
 
 var app = express();
 
@@ -26,7 +30,8 @@ app.get('/', (req, res) => {res.sendFile("splash.html", {root: "./public"});});
 app.use('/users', usersRouter);
 app.post('/play', (req, res) => {
   console.log(req.body.username);
-  res.sendFile('game.html', {root: "./public"});
+  //res.sendFile('game.html', {root: "./public"});
+  res.render('game.ejs', {username: req.body.username});
 })
 
 // catch 404 and forward to error handler
@@ -49,6 +54,61 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var server = http.createServer(app);
+var wss = ws.Server({server});
+var last_game = null;
+var connections = [];
+var connectionsID = 0;
+
+wss.on('connection', (websocket) =>{
+  websocket.id = connectionsID++;
+  if (last_game){
+    //there is a non-full game
+    connections[websocket.id] = last_game;
+    last_game.players.second = websocket;
+    let message1 = messages.O_OPPONENT_CONNECTED;
+    message1.data = {opponent: "Opponent"};
+    websocket.send(JSON.stringify(message1));
+
+  }
+  else{
+    //there is no full game
+    var new_game = new Game(websocket);
+    last_game = new_game;
+    connections[websocket.id] = new_game;
+    websocket.send(messages.S_WAITING_FOR_PLAYER);
+    //websocket.send(messages.S_GET_USERNAME);
+  }
+
+  websocket.on('message', (message) =>{
+    Msg = JSON.parse(message);
+    if (Msg.type = messages.T_MOVE){
+      try{
+        connections[websocket.id].move(
+          Msg.data.x,
+          Msg.data.y,
+          Msg.data.player
+        );
+        let response = messages.O_MOVE;
+        response.data = Msg.data;
+        let resStr = JSON.stringify(response);
+        connections[websocket.id].players.first.send(resStr);
+        connections[websocket.id].players.second.send(resStr);
+      }
+      catch(err){
+        if(err instanceof WrongMoveError){
+          websocket.send(messages.S_WRONG_MOVE);
+        }
+        else{
+          throw err;
+        }
+      }
+    }
+  })
+
+  websocket.on('close', (code)=>{
+    //TODO connection end handler
+  })
+})
 
 server.listen(port);
 server.on('error', onError);
