@@ -22,7 +22,7 @@ var game = function(first_player){
         [0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0]
     ]
-    this.gameState = 'ONGOING'
+    this.gameState = 'WAITING'
 };
 
 game.prototype.move = function(x, y, player){

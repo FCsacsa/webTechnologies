@@ -70,8 +70,9 @@ wss.on('connection', (websocket) =>{
       let message1 = messages.O_OPPONENT_CONNECTED;
       message1.data = last_game.names.first;
       websocket.send(JSON.stringify(message1));
-      console.log('connection set for second player, late');
     }
+    last_game.gameState = 'ONGOING';
+    last_game = null; //the last game is now full --> there is no one waiting
   }
   else{
     //there is no full game
@@ -98,9 +99,11 @@ wss.on('connection', (websocket) =>{
           let resStr = JSON.stringify(response);
           connections[websocket.id].players.first.send(resStr);
           connections[websocket.id].players.second.send(resStr);
+          //TODO CHECK WIN
         }
         catch(err){
           if(err instanceof WrongMoveError){
+            console.log(messages.O_WRONG_MOVE);
             websocket.send(messages.S_WRONG_MOVE);
           }
           else{
@@ -119,7 +122,6 @@ wss.on('connection', (websocket) =>{
             let message1 = messages.O_OPPONENT_CONNECTED;
             message1.data = Msg.data;
             curr_game.players.second.send(JSON.stringify(message1));
-            console.log('connection set for second player, early');
           }
         }
         else {
@@ -127,7 +129,6 @@ wss.on('connection', (websocket) =>{
           let message1 = messages.O_OPPONENT_CONNECTED;
           message1.data = Msg.data;
           curr_game.players.first.send(JSON.stringify(message1));
-          console.log('connection set for first player');
         }
       
       default:
@@ -137,6 +138,32 @@ wss.on('connection', (websocket) =>{
 
   websocket.on('close', (code)=>{
     //TODO connection end handler
+    let curr_game = connections[websocket.id]; //get the disconnected players game
+    console.log(`connection lost || state: ${curr_game.gameState}`);
+    switch (curr_game.gameState) {
+      case 'WAITING':
+        //ONLY ONE PLAYER JOINED
+        last_game = null;
+        break;
+
+      case 'ONGOING':
+        // PLAYER DISCONNECTED DURING GAME
+        if (curr_game.players.first.id == websocket.id) {
+          curr_game.players.second.send(messages.S_GAME_ABORTED);
+        }
+        else {
+          curr_game.players.first.send(messages.S_GAME_ABORTED);
+        }
+        break;
+
+      case 'FINISHED':
+        // GAME HAS ENDED ALREADY
+        // NOTHING TO DO, MAYBE CLEAN UP THE LEFTOVER VARIABLES
+        break;
+    
+      default:
+        break;
+    }
   })
 })
 

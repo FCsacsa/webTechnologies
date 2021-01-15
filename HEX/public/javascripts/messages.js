@@ -48,7 +48,7 @@
 
     exports.T_WRONG_MOVE = "WRONG-MOVE";
     exports.O_WRONG_MOVE = {
-        type: exports.O_WRONG_MOVE
+        type: exports.T_WRONG_MOVE
     }
     exports.S_WRONG_MOVE = JSON.stringify(exports.O_WRONG_MOVE);
     
