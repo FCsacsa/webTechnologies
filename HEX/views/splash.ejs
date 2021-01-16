@@ -1,9 +1,7 @@
-<!--REPLACED BY splash.ejs-->
-
 <!DOCTYPE html>
 <html>
     <head>
-        <title>NOT IN USE - HEX</title>
+        <title>HEX</title>
     </head>
     <body>
         <img id="logo" />
@@ -12,23 +10,23 @@
                 <th>
                     Now playing:
                 </th>
-                <th id="playing">1000</th>
+                <th id="playing"><%= playing %></th>
             </tr>
             <tr>
                 <th>
                     Games started:
                 </th>
-                <th id="online">0</th>
+                <th id="started"><%= started %></th>
             </tr>
             <tr>
                 <th>
                     Games Finished:
                 </th>
-                <th id="finished">0</th>
+                <th id="finished"><%= finished %></th>
             </tr>
         </table>
 
-        <form>
+        <form method="POST" action="/play">
             <input name="username" type="text" value="username" maxlength="23"/>
             <button>Play!</button>
         </form>

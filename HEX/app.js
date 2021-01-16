@@ -8,11 +8,12 @@ var http = require('http');
 var ws = require('ws');
 var Game = require('./game.js');
 var messages = require('./public/javascripts/messages.js');
+var WrongMoveError = require('./errors.js');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const { connect } = require('./routes/index');
-const WrongMoveError = require('./errors.js');
+//var indexRouter = require('./routes/index'); // NOT USED
+//var usersRouter = require('./routes/users'); // NOT USED
+//const { connect } = require('./routes/index'); // NOT USED
+
 
 var app = express();
 
@@ -26,8 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {res.sendFile("splash.html", {root: "./public"});});
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter); // NOT USED
+app.get('/', (req, res) => {res.render("splash.ejs", {});});
 app.post('/play', (req, res) => {
   console.log(req.body.username);
   //res.sendFile('game.html', {root: "./public"});
@@ -55,6 +56,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var wss = new ws.Server({server});
+
 var last_game = null;
 var connections = [];
 var connectionsID = 0;
@@ -103,7 +105,6 @@ wss.on('connection', (websocket) =>{
         }
         catch(err){
           if(err instanceof WrongMoveError){
-            console.log(messages.O_WRONG_MOVE);
             websocket.send(messages.S_WRONG_MOVE);
           }
           else{

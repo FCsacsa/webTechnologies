@@ -1,6 +1,6 @@
 "use strict";
-let board_start_x = 3;
-let board_start_y = 3;
+const BOARD_START_X = 3;
+const BOARD_START_Y = 3;
 let red = "#FA8F71";
 let dark_red = "#AB4D33";
 let blue = "#577CFA";
@@ -17,7 +17,6 @@ for (let i = 0; i < 11; i++){
     for (let j = 0; j < 11; j++){
         let tile = document.getElementById("template").cloneNode(true);
         let hexagon = tile.childNodes[1];
-        //console.log(tile.childNodes);
         hexagon.style = "pointer-events: all;";
         hexagon.addEventListener("click", ()=>{
             clickHandler(j, i);
@@ -41,7 +40,6 @@ for (let i = 0; i < 11; i++){
             default:
                 break;
         }
-        let border2;
         switch (j) {
             case 10:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
@@ -60,10 +58,10 @@ for (let i = 0; i < 11; i++){
             default:
                 break;
         }
-        tile.style.gridColumnStart = i + (j * 2) + board_start_x;
-        tile.style.gridColumnEnd = i + (j * 2) + board_start_x + 2;
-        tile.style.gridRowStart = (i * 2) + board_start_y;
-        tile.style.gridRowEnd = (i * 2) + board_start_y + 3;
+        tile.style.gridColumnStart = i + (j * 2) + BOARD_START_X;
+        tile.style.gridColumnEnd = i + (j * 2) + BOARD_START_X + 2;
+        tile.style.gridRowStart = (i * 2) + BOARD_START_Y;
+        tile.style.gridRowEnd = (i * 2) + BOARD_START_Y + 3;
         tile.style.display = "";
         grid.appendChild(tile);
     }
@@ -132,7 +130,7 @@ ws.onmessage = function(event) {
             break;
 
         case Messages.T_GAME_ABORTED:
-            turn_label.innerHTML = `Opponent left the game return to main menu`;
+            turn_label.innerHTML = `Opponent left the game, return to main menu`;
             clearInterval(timer);
             home.style.display = 'initial';
             our_turn = false;
@@ -159,12 +157,6 @@ function clickHandler(x,y) {
         }
         ws.send(JSON.stringify(message));
     }
-
-
-    //th.style = `fill: ${blue}`;
-    /*
-    console.log(svgs[x + 11 * y + 1].firstElementChild.style);
-    */
 }
 
 function putPiece(x,y) {
@@ -185,7 +177,7 @@ function endGame(winner) {
     turn_label.innerHTML = `Game over please return to the main menu`;
     home.style.display = 'initial';
     our_turn = false;
-    if (winner = player){
+    if (winner == player){
         
     } else {
 
