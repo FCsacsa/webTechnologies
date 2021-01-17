@@ -1,3 +1,7 @@
+body {
+    background: #202020;
+}
+
 #grid {
     display: grid;
     grid-template-columns: auto 60px repeat(32, 30px) 60px auto;
@@ -12,12 +16,12 @@
 
 #player {
     grid-area: 3 / 2 / 26 / 12;
-    grid-template-rows: 10fr 1fr 3fr;
+    grid-template-rows: 1fr 9fr 1fr 3fr;
 }
 
 #opponent {
     grid-area: 3 / 26 / 26 / 36;
-    grid-template-rows: 3fr 1fr 10fr;
+    grid-template-rows: 3fr 1fr 9fr 1fr;
 }
 
 #player a, #opponent a{
@@ -29,13 +33,35 @@
     text-align: right;
 }
 
-#player_name, #opponent_name {
+#player_name {
+    grid-row: 3;
+    font-size: 16pt;
+}
+
+#opponent_name {
     grid-row: 2;
     font-size: 16pt;
 }
 
+#player_won, #player_lost, #opponent_won, #opponent_lost {
+    font-size: 20pt;
+    text-shadow: 2px 2px #404040;
+}
+
+#player_won, #player_lost {
+    grid-row: 2;
+}
+
+#opponent_won, #player_won {
+    color: gold;
+}
+
+#opponent_lost, #player_lost {
+    color: #60E1E0;
+}
+
 #player_pieces {
-    grid-row: 3;
+    grid-row: 4;
 }
 
 #opponent_pieces {
@@ -46,11 +72,13 @@
     grid-area: 1 / 2 / 1 / 36;
     text-align: center;
     font-size: 52pt;
+    color: #fff;
 }
 
 #turn_label {
     grid-area: 2 / 2 / 2 / 36;
     text-align: center;
+    color: #fff;
 }
 
 #home {
@@ -60,8 +88,15 @@
 #home button{
     position: fixed;
     width: 200px;
-    height: 90px;
-    border-radius: 30px;
+    height: 45px;
+    border-radius: 20px;
     left: calc(50vw - 100px);
     top: calc(50vh - 45px);
+    color: #fff;
+    background: #2a92c2;
+    border: none;
+}
+
+#home button:hover {
+    background: #1C77C3;
 }

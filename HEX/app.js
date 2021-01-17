@@ -1,7 +1,5 @@
-var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var debug = require('debug')('hex:server');
 var http = require('http');
@@ -9,10 +7,9 @@ var ws = require('ws');
 var Game = require('./game.js');
 var messages = require('./public/javascripts/messages.js');
 var WrongMoveError = require('./errors.js');
-
-//var indexRouter = require('./routes/index'); // NOT USED
-//var usersRouter = require('./routes/users'); // NOT USED
-//const { connect } = require('./routes/index'); // NOT USED
+var load = require('./routes/index');
+var indexRouter = load.router;
+var stats = load.data;
 
 
 var app = express();
@@ -21,36 +18,23 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/users', usersRouter); // NOT USED
-app.get('/', (req, res) => {res.render("splash.ejs", {});});
-app.post('/play', (req, res) => {
-  console.log(req.body.username);
-  //res.sendFile('game.html', {root: "./public"});
-  res.render('game.ejs', {username: req.body.username});
-})
+app.use(logger('dev')); //not necessary, but creates nice logs on the console
+app.use(express.json()); // DO NOT DELETE, needed for the form
+app.use(express.urlencoded({ extended: false })); // DO NOT DELETE, needed for the form
+app.use(express.static(path.join(__dirname, 'public'))); // DO NOT DELETE, needed to load resources correctly
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+app.use('/', indexRouter); //set up the pages
 
-// error handler
+// error handler -- made by the express generator
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
+// setting up the port
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
@@ -63,6 +47,7 @@ var connectionsID = 0;
 
 wss.on('connection', (websocket) =>{
   websocket.id = connectionsID++;
+  stats.playing++;
   if (last_game != null){
     //there is a non-full game
     connections[websocket.id] = last_game;
@@ -79,6 +64,7 @@ wss.on('connection', (websocket) =>{
   else{
     //there is no full game
     var new_game = new Game(websocket);
+    stats.started++;
     last_game = new_game;
     connections[websocket.id] = new_game;
     new_game.players.first = websocket;
@@ -91,20 +77,32 @@ wss.on('connection', (websocket) =>{
     switch (Msg.type) {
       case messages.T_MOVE:
         try{
-          connections[websocket.id].move(
+          let curr_game = connections[websocket.id];
+          curr_game.move(
             Msg.data.x,
             Msg.data.y,
             Msg.data.player
           );
+
           let response = messages.O_MOVE;
           response.data = Msg.data;
           let resStr = JSON.stringify(response);
-          connections[websocket.id].players.first.send(resStr);
-          connections[websocket.id].players.second.send(resStr);
-          //TODO CHECK WIN
+          curr_game.players.first.send(resStr);
+          curr_game.players.second.send(resStr);
+
+          win = curr_game.gameEnded(Msg.data.x,Msg.data.y, Msg.data.player);
+          if (win.winner != 0) {
+            stats.finished++;
+            let winMsg = messages.O_GAME_OVER;
+            winMsg.data = {win};
+            winStr = JSON.stringify(winMsg);
+            curr_game.players.first.send(winStr);
+            curr_game.players.second.send(winStr);
+          }
         }
         catch(err){
           if(err instanceof WrongMoveError){
+            // inform the player that the move is invalid
             websocket.send(messages.S_WRONG_MOVE);
           }
           else{
@@ -117,15 +115,20 @@ wss.on('connection', (websocket) =>{
         let curr_game = connections[websocket.id];
         console.log(curr_game.players.first.id);
         console.log(websocket.id);
+        
         if(curr_game.players.first.id == websocket.id){
+          // the player is the first player
           curr_game.names.first = Msg.data;
+
           if(curr_game.players.second != null) {
+            //if the second player is already connected, send him the name
             let message1 = messages.O_OPPONENT_CONNECTED;
             message1.data = Msg.data;
             curr_game.players.second.send(JSON.stringify(message1));
           }
         }
         else {
+          // the message is from the seconf player
           curr_game.names.second = Msg.data;
           let message1 = messages.O_OPPONENT_CONNECTED;
           message1.data = Msg.data;
@@ -138,9 +141,10 @@ wss.on('connection', (websocket) =>{
   })
 
   websocket.on('close', (code)=>{
-    //TODO connection end handler
+    stats.playing--;
     let curr_game = connections[websocket.id]; //get the disconnected players game
     console.log(`connection lost || state: ${curr_game.gameState}`);
+    
     switch (curr_game.gameState) {
       case 'WAITING':
         //ONLY ONE PLAYER JOINED
@@ -168,23 +172,23 @@ wss.on('connection', (websocket) =>{
   })
 })
 
+//start listening
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+
+
+// FUNCTIONS MADE BY THE GENERATOR
+
 function normalizePort(val) {
   var port = parseInt(val, 10);
-
   if (isNaN(port)) {
-    // named pipe
     return val;
   }
-
   if (port >= 0) {
-    // port number
     return port;
   }
-
   return false;
 }
 
@@ -192,12 +196,9 @@ function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
   }
-
   var bind = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');

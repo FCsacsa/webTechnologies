@@ -31,7 +31,12 @@ game.prototype.move = function(x, y, player){
 };
 
 game.prototype.gameEnded = function(x, y){
-    return 0;
+    let win = {
+        winner: 0,
+        line: []
+    }
+    
+    return win;
     //TODO implement a function that checks if a player won
     //use last move as starting point?
 };

@@ -1,16 +1,22 @@
 "use strict";
 const BOARD_START_X = 3;
 const BOARD_START_Y = 3;
-let red = "#FA8F71";
-let dark_red = "#AB4D33";
-let blue = "#577CFA";
-let dark_blue = "#455DAD";
-let stroke_width = 5;
+const RED = "#FA8F71";
+const DARK_RED = "#AB4D33";
+const BLUE = "#577CFA";
+const DARK_BLUE = "#455DAD";
+const GOLD = '#ffd700';
+const DARK = '#202020';
+const STROKE_WIDTH = 5;
+const COLOURS = [[RED, DARK_RED], [BLUE, DARK_BLUE]];
 
-let colours = [[red, dark_red], [blue, dark_blue]];
-
-//loading the table
+//get all needed elements from the document
 let grid = document.getElementById("grid");
+let our_moves_label = document.getElementById('player_pieces');
+let opp_moves_label = document.getElementById('opponent_pieces');
+let clock = document.getElementById("timer");
+let turn_label = document.getElementById('turn_label');
+let home = document.getElementById('home');
 
 //load the board
 for (let i = 0; i < 11; i++){
@@ -25,14 +31,14 @@ for (let i = 0; i < 11; i++){
         switch (i) {
             case 10:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                border.style = `stroke: ${blue}; stroke-width: ${stroke_width}; fill:none;`;
+                border.style = `stroke: ${BLUE}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,51.96 30,69.28 60,51.96");
                 tile.appendChild(border);
                 break;
             
             case 0:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                border.style = `stroke: ${blue}; stroke-width: ${stroke_width}; fill:none;`;
+                border.style = `stroke: ${BLUE}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,17.32 30,0 60,17.32");
                 tile.appendChild(border);
                 break;
@@ -43,14 +49,14 @@ for (let i = 0; i < 11; i++){
         switch (j) {
             case 10:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                border.style = `stroke: ${red}; stroke-width: ${stroke_width}; fill:none;`;
+                border.style = `stroke: ${RED}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "60,51.96 60,17.32 30,0");
                 tile.appendChild(border);
                 break;
             
             case 0:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-                border.style = `stroke: ${red}; stroke-width: ${stroke_width}; fill:none;`;
+                border.style = `stroke: ${RED}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,17.32 0,51.96 30,69.28");
                 tile.appendChild(border);
                 break;
@@ -67,31 +73,31 @@ for (let i = 0; i < 11; i++){
     }
 }
 
+//get the newly created svgs
+let svgs = document.getElementsByTagName('svg');
+
 //setup the Websocket
 let ws = new WebSocket('ws://localhost:3000');
+
+// variables for the game
 let player = 2;
 let our_turn = false;
-let svgs = document.getElementsByTagName('svg');
 let our_moves = 0;
-let our_moves_label = document.getElementById('player_pieces');
 let opp_moves = 0;
-let opp_moves_label = document.getElementById('opponent_pieces');
-let clock = document.getElementById("timer");
 let secs = 0;
 let mins = 0;
 let timer = null;
-let turn_label = document.getElementById('turn_label');
-let home = document.getElementById('home');
 
 
 ws.onmessage = function(event) {
     let message = JSON.parse(event.data);
     console.log(message);
+
     switch (message.type) {
         case Messages.T_WAITING_FOR_PLAYER:
             player = 1;
-            document.getElementById('player').style.background = `linear-gradient(to bottom left, #fff 0% 50%, ${red} 50% 100%)`;
-            document.getElementById('opponent').style.background = `linear-gradient(to top right, #fff 0% 50%, ${blue} 50% 100%)`;
+            document.getElementById('player').style.background = `linear-gradient(to bottom left, ${DARK} 0% 50%, ${RED} 50% 100%)`;
+            document.getElementById('opponent').style.background = `linear-gradient(to top right, ${DARK} 0% 50%, ${BLUE} 50% 100%)`;
             break;
 
         case Messages.T_GET_USERNAME:
@@ -108,8 +114,8 @@ ws.onmessage = function(event) {
                 turn_label.innerHTML = `Your turn`;
             }
             else {
-                document.getElementById('player').style.background = `linear-gradient(to bottom left, #fff 0% 50%, ${blue} 50% 100%)`;
-                document.getElementById('opponent').style.background = `linear-gradient(to top right, #fff 0% 50%, ${red} 50% 100%)`;
+                document.getElementById('player').style.background = `linear-gradient(to bottom left, #fff 0% 50%, ${BLUE} 50% 100%)`;
+                document.getElementById('opponent').style.background = `linear-gradient(to top right, #fff 0% 50%, ${RED} 50% 100%)`;
                 turn_label.innerHTML = `Opponent's turn`;
             }
             break;  
@@ -161,26 +167,35 @@ function clickHandler(x,y) {
 
 function putPiece(x,y) {
     if(our_turn){
-        svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${colours[player - 1][0]}; stroke: ${colours[player - 1][1]}; stroke-width: ${stroke_width}`;
+        svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${COLOURS[player - 1][0]}; stroke: ${COLOURS[player - 1][1]}; stroke-width: ${STROKE_WIDTH}`;
         our_moves++;
         our_moves_label.innerHTML = `${our_moves} piece${(our_moves == 1) ? '' : 's'} placed`;
     }
     else {
-        svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${colours[2 - player][0]}; stroke: ${colours[2 - player][1]}; stroke-width: ${stroke_width}`;
+        svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${COLOURS[2 - player][0]}; stroke: ${COLOURS[2 - player][1]}; stroke-width: ${STROKE_WIDTH}`;
         opp_moves++;
         opp_moves_label.innerHTML = `${opp_moves} piece${(opp_moves == 1) ? '' : 's'} placed`;
     }
 }
 
-function endGame(winner) {
+function putBorder(x,y) {
+    svgs[x + 11 * y + 1].firstElementChild.style.stroke = GOLD; 
+}
+
+function endGame(win) {
     clearInterval(timer);
     turn_label.innerHTML = `Game over please return to the main menu`;
     home.style.display = 'initial';
     our_turn = false;
-    if (winner == player){
-        
-    } else {
-
+    if (win.winner == player){
+        document.getElementById('player_won').style.display = '';
+        document.getElementById('opponent_lost').style.display = '';
+    }else {
+        document.getElementById('player_lost').style.display = '';
+        document.getElementById('opponent_won').style.display = '';
+    }
+    for(let coords in win.line){
+        putBorder(coords[0], coords[1]);    // highlight the winning bridge       
     }
 }
 
