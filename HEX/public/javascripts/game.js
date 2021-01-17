@@ -87,6 +87,7 @@ let opp_moves = 0;
 let secs = 0;
 let mins = 0;
 let timer = null;
+let placeSound = new Audio('../sounds/place.flac');
 
 
 ws.onmessage = function(event) {
@@ -114,8 +115,8 @@ ws.onmessage = function(event) {
                 turn_label.innerHTML = `Your turn`;
             }
             else {
-                document.getElementById('player').style.background = `linear-gradient(to bottom left, #fff 0% 50%, ${BLUE} 50% 100%)`;
-                document.getElementById('opponent').style.background = `linear-gradient(to top right, #fff 0% 50%, ${RED} 50% 100%)`;
+                document.getElementById('player').style.background = `linear-gradient(to bottom left, ${DARK} 0% 50%, ${BLUE} 50% 100%)`;
+                document.getElementById('opponent').style.background = `linear-gradient(to top right, ${DARK} 0% 50%, ${RED} 50% 100%)`;
                 turn_label.innerHTML = `Opponent's turn`;
             }
             break;  
@@ -166,6 +167,7 @@ function clickHandler(x,y) {
 }
 
 function putPiece(x,y) {
+    placeSound.play();
     if(our_turn){
         svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${COLOURS[player - 1][0]}; stroke: ${COLOURS[player - 1][1]}; stroke-width: ${STROKE_WIDTH}`;
         our_moves++;

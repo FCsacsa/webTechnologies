@@ -94,7 +94,7 @@ body {
     top: calc(50vh - 45px);
     color: #fff;
     background: #2a92c2;
-    border: none;
+    border: solid #16465c 2px;
 }
 
 #home button:hover {
