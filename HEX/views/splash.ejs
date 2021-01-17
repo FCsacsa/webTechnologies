@@ -2,27 +2,29 @@
 <html>
     <head>
         <title>HEX</title>
+        <link rel='stylesheet' href="stylesheets/splash.css"/>
+        <link rel='stylesheet' media="(max-width: 1365px), (max-height: 767px)" href="stylesheets/small.css"/>
     </head>
     <body>
-        <img id="logo" />
+        <img id="logo" src="/images/logo.png" />
         <table id="stats">
             <tr>
                 <th>
                     Now playing:
                 </th>
-                <th id="playing"><%= playing %></th>
+                <th id="playing" class="right"><%= playing %></th>
             </tr>
             <tr>
                 <th>
                     Games started:
                 </th>
-                <th id="started"><%= started %></th>
+                <th id="started" class="right"><%= started %></th>
             </tr>
             <tr>
                 <th>
                     Games Finished:
                 </th>
-                <th id="finished"><%= finished %></th>
+                <th id="finished" class="right"><%= finished %></th>
             </tr>
         </table>
 
@@ -30,5 +32,7 @@
             <input name="username" type="text" value="username" maxlength="23"/>
             <button>Play!</button>
         </form>
+
+        <a id="warning">Your screen is too small for the game, the minimum resolution is 1366x768.</a>
     </body>
 </html>

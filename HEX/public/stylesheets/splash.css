@@ -1,0 +1,78 @@
+body {
+    background-image: url('../images/background.png');
+}
+
+@keyframes grow-shrink {
+    
+    0% {width: 390px; transform: rotate(10deg);}
+    
+    50% {width: 410px; transform: rotate(-10deg);}
+    100% {width: 390px; transform: rotate(10deg);}
+}
+
+img {
+    width: 400px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    animation-name: grow-shrink;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+    animation-delay: 0s;
+}
+
+table {
+    width: 400px;
+    position: absolute;
+    right: 200px;
+    top: 100px;
+    background: #577cfad0;
+    color: #fff;
+    border: dashed #455DAD;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+    font-size: 16pt;
+}
+
+.right {
+    text-align: right;
+}
+
+form {
+    position: absolute;
+    bottom: 120px;
+    right: 150px;
+    text-align: center;
+}
+
+form input {
+    position: relative;
+    right: 15px;
+    height: 57px;
+    font-size: 24pt;
+    border-radius: 27px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+form button {
+    background: #FA8F71e0;
+    width: 180px;
+    height: 67.5px;
+    border: dotted #AB4D33;
+    border-radius: 27px;
+    font-size: 24pt;
+}
+
+form button:hover {
+    background: #b36853e0;
+}
+
+form button::before {
+    content: "\2694";
+}
+
+#warning {
+    display: none;
+}
