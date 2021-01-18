@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Potta+One&display=swap');
+
 body {
     background: #202020;
+    color: #fff;
+    font-family: 'Potta One';
 }
 
 #grid {
@@ -12,15 +16,16 @@ body {
 #player, #opponent {
     display: grid;
     grid-template-columns: auto;
+    grid-row: 3 / 26;
 }
 
 #player {
-    grid-area: 3 / 2 / 26 / 12;
+    grid-column: 2 / 12;
     grid-template-rows: 1fr 9fr 1fr 3fr;
 }
 
 #opponent {
-    grid-area: 3 / 26 / 26 / 36;
+    grid-column: 26 / 36;
     grid-template-rows: 3fr 1fr 9fr 1fr;
 }
 

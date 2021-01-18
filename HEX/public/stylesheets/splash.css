@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Potta+One&display=swap');
+
 body {
     background-image: url('../images/background.png');
+    font-family: 'Potta One';
 }
 
 @keyframes grow-shrink {
@@ -48,6 +51,8 @@ form input {
     position: relative;
     right: 15px;
     height: 57px;
+    color: #404040;
+    font: inherit;
     font-size: 24pt;
     border-radius: 27px;
     padding-left: 10px;
@@ -60,13 +65,12 @@ form button {
     height: 67.5px;
     border: dotted #AB4D33;
     border-radius: 27px;
+    font: inherit;
     font-size: 24pt;
 }
-
 form button:hover {
     background: #b36853e0;
 }
-
 form button::before {
     content: "\2694";
 }
