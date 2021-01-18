@@ -144,6 +144,7 @@ ws.onmessage = function(event) {
             break;
 
         case Messages.T_GAME_OVER:
+            console.log(message.data);
             endGame(message.data);
             break;
     
@@ -189,16 +190,21 @@ function endGame(win) {
     turn_label.innerHTML = `Game over please return to the main menu`;
     home.style.display = 'initial';
     our_turn = false;
+    console.log(win.winner);
+    console.log(win.winner == player);
     if (win.winner == player){
+        console.log('won');
         document.getElementById('player_won').style.display = '';
         document.getElementById('opponent_lost').style.display = '';
     }else {
+        console.log('lost');
         document.getElementById('player_lost').style.display = '';
         document.getElementById('opponent_won').style.display = '';
     }
-    for(let coords in win.line){
-        putBorder(coords[0], coords[1]);    // highlight the winning bridge       
-    }
+    win.line.forEach(element => {
+        let coords = JSON.parse(element);
+        putBorder(coords[0], coords[1]);
+    });
 }
 
 function updateTime(){

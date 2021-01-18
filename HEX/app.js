@@ -98,7 +98,7 @@ wss.on('connection', (websocket) =>{
           if (win.winner != 0) {
             stats.finished++;
             let winMsg = messages.O_GAME_OVER;
-            winMsg.data = {win};
+            winMsg.data = win;
             winStr = JSON.stringify(winMsg);
             curr_game.players.first.send(winStr);
             curr_game.players.second.send(winStr);
