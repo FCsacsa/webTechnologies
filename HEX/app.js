@@ -8,8 +8,12 @@ var Game = require('./game.js');
 var messages = require('./public/javascripts/messages.js');
 var WrongMoveError = require('./errors.js');
 var load = require('./routes/index');
-var indexRouter = load.router;
-var stats = load.data;
+var stats = {
+  playing: 0,
+  started: 0,
+  finished: 0
+}
+var indexRouter = load(stats);
 
 
 var app = express();
