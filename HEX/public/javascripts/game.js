@@ -27,12 +27,14 @@ for (let i = 0; i < 11; i++){
         hexagon.addEventListener("click", ()=>{
             clickHandler(j, i);
         });
+        hexagon.setAttribute("stroke-linecap", "round");
         let border;
         switch (i) {
             case 10:
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 border.style = `stroke: ${BLUE}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,51.96 30,69.28 60,51.96");
+                border.setAttribute("stroke-linecap", "round");
                 tile.appendChild(border);
                 break;
             
@@ -40,6 +42,7 @@ for (let i = 0; i < 11; i++){
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 border.style = `stroke: ${BLUE}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,17.32 30,0 60,17.32");
+                border.setAttribute("stroke-linecap", "round");
                 tile.appendChild(border);
                 break;
         
@@ -51,6 +54,7 @@ for (let i = 0; i < 11; i++){
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 border.style = `stroke: ${RED}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "60,51.96 60,17.32 30,0");
+                border.setAttribute("stroke-linecap", "round");
                 tile.appendChild(border);
                 break;
             
@@ -58,6 +62,7 @@ for (let i = 0; i < 11; i++){
                 border = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
                 border.style = `stroke: ${RED}; stroke-width: ${STROKE_WIDTH}; fill:none;`;
                 border.setAttribute("points", "0,17.32 0,51.96 30,69.28");
+                border.setAttribute("stroke-linecap", "round");
                 tile.appendChild(border);
                 break;
         
@@ -122,13 +127,14 @@ ws.onmessage = function(event) {
             break;  
 
         case Messages.T_MOVE:
-            putPiece(message.data.x, message.data.y);
-            our_turn = !our_turn;
-            if (our_turn){
+            putPiece(message.data.x, message.data.y, message.data.player);
+            if (message.data.player != player){
                 turn_label.innerHTML = `Your turn`;
+                our_turn = true;
             }
             else {
                 turn_label.innerHTML = `Opponent's turn`;
+                our_turn = false;
             }
             break;
 
@@ -167,9 +173,9 @@ function clickHandler(x,y) {
     }
 }
 
-function putPiece(x,y) {
+function putPiece(x,y, msgPlayer) {
     placeSound.play();
-    if(our_turn){
+    if(msgPlayer == player){
         svgs[x + 11 * y + 1].firstElementChild.style = `fill: ${COLOURS[player - 1][0]}; stroke: ${COLOURS[player - 1][1]}; stroke-width: ${STROKE_WIDTH}`;
         our_moves++;
         our_moves_label.innerHTML = `${our_moves} piece${(our_moves == 1) ? '' : 's'} placed`;

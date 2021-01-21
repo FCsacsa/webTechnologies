@@ -8,7 +8,7 @@ var game = function(first_player){
     this.names = {
         first: null,
         second: null
-    }
+    };
     this.board = [
         [0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0],
@@ -21,20 +21,23 @@ var game = function(first_player){
         [0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0]
-    ]
-    this.gameState = 'WAITING'
+    ];
+    this.gameState = 'WAITING';
+    this.curr_player = 1;
 };
 
 game.prototype.move = function(x, y, player){
+    if(this.curr_player != player) throw new WrongMoveError();
     if (this.board[x][y] != 0) throw new WrongMoveError();
     this.board[x][y] = player;
+    this.curr_player = 3 - this.curr_player;
 };
 
 game.prototype.gameEnded = function(x_in, y_in, player){
     let win = {
         winner: 0,
         line: []
-    }
+    };
     let stack = [];
     stack.push([x_in, y_in]);
     let visited = new Set();
